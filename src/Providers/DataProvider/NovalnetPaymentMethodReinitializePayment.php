@@ -40,6 +40,20 @@ class NovalnetPaymentMethodReinitializePayment
         
         // Get the Novalnet payment key and MOP Id
         $transactionDetails = $paymentService->getDetailsFromPaymentProperty($order['id']);
+        
+        // Build the payment request paramters
+        if(!empty($basketRepository->load())) {
+            // Assign the billing and shipping address Id
+            $basketRepository->load()->customerInvoiceAddressId = !empty($basketRepository->load()->customerInvoiceAddressId) ? $basketRepository->load()->customerInvoiceAddressId : $order['billingAddress']['id'];
+            $basketRepository->load()->customerShippingAddressId = !empty($basketRepository->load()->customerShippingAddressId) ? $basketRepository->load()->customerShippingAddressId : $order['deliveryAddress']['id'];
+            
+            $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']));
+            
+            // Set the payment request parameters into session
+            $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
+            $sessionStorage->getPlugin()->setValue('nnOrderNo', $order['id']);
+            $sessionStorage->getPlugin()->setValue('paymentkey', strtoupper($transactionDetails['paymentName']));
+        }
 
         // If the Novalnet payments are rejected do the reinitialize payment
         if(strpos($transactionDetails['paymentName'], 'novalnet') !== false &&  ((!empty($transactionDetails['tx_status']) && !in_array($transactionDetails['tx_status'], ['PENDING', 'ON_HOLD', 'CONFIRMED', 'DEACTIVATED'])) || empty($transactionDetails['tx_status']))) {
