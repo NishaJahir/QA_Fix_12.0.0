@@ -37,7 +37,7 @@ class NovalnetPaymentMethodReinitializePayment
                 $mopId = $orderProperty['value'];
             }
         }
-        
+
         // Get the Novalnet payment key and MOP Id
         $transactionDetails = $paymentService->getDetailsFromPaymentProperty($order['id']);
         
@@ -46,6 +46,17 @@ class NovalnetPaymentMethodReinitializePayment
             // Assign the billing and shipping address Id
             $basketRepository->load()->customerInvoiceAddressId = !empty($basketRepository->load()->customerInvoiceAddressId) ? $basketRepository->load()->customerInvoiceAddressId : $order['billingAddress']['id'];
             $basketRepository->load()->customerShippingAddressId = !empty($basketRepository->load()->customerShippingAddressId) ? $basketRepository->load()->customerShippingAddressId : $order['deliveryAddress']['id'];
+            
+            // Get the proper order amount even the system currency and payment currency are differ
+            if(count($order['amounts']) > 1) {
+                foreach($order['amounts'] as $orderAmount) {
+                    if($basketRepository->load()->currency == $orderAmount['currency']) {
+                        $basketRepository->load()->basketAmount = $orderAmount['invoiceTotal'];
+                    }
+                }
+            } else {
+                $basketRepository->load()->basketAmount = $order['amounts'][0]['invoiceTotal'];
+            }
             
             $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']));
             
