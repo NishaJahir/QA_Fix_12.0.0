@@ -13,7 +13,7 @@
  * All rights reserved. https://www.novalnet.de/payment-plugins/kostenlos/lizenz
  */
 
-namespace Novalnet\Providers;
+namespace Novalnet\Providers\DataProvider;
 
 use Plenty\Plugin\Templates\Twig;
 use Plenty\Modules\Basket\Models\Basket;
