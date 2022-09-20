@@ -39,19 +39,24 @@
     ],
     "dataProviders": [
         {
-        "key": "Novalnet\\Providers\\DataProvider\\NovalnetOrderConfirmationDataProvider",
-        "name": "Novalnet payment details",
-        "description": "Display the Novalnet payment details on the order confirmation page"
+            "key": "Novalnet\\Providers\\DataProvider\\NovalnetOrderConfirmationDataProvider",
+            "name": "Novalnet payment details",
+            "description": "Display the Novalnet payment details on the order confirmation page"
         },
         {
-        "key": "Novalnet\\Providers\\DataProvider\\NovalnetGooglePayButtonDataProvider",
-        "name": "Novalnet Google Pay button",
-        "description": "Display the Google Pay Button"
+            "key": "Novalnet\\Providers\\DataProvider\\NovalnetGooglePayButtonDataProvider",
+            "name": "Novalnet Google Pay button",
+            "description": "Display the Google Pay Button"
         },
         {
-        "key": "Novalnet\\Providers\\DataProvider\\NovalnetPaymentMethodReinitializePaymentScriptDataProvider",
-        "name": "Novalnet Initiate Payment Script",
-        "description": "A script for hide the Apple Pay in not supporting browsers"
+            "key": "Novalnet\\Providers\\DataProvider\\NovalnetPaymentMethodReinitializePaymentScriptDataProvider",
+            "name": "Novalnet Initiate Payment Script",
+            "description": "A script for hide the Apple Pay in not supporting browsers"
+        },
+        {
+            "key": "Novalnet\\Providers\\DataProvider\\NovalnetPaymentMethodReinitializePayment",
+            "name": "Novalnet Initiate Payment",
+            "description": "Display the pay now Button"
         }
     ]
 }
