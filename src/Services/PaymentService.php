@@ -202,6 +202,7 @@ class PaymentService
      */
     public function generatePaymentParams(Basket $basket, $paymentKey = '')
     {
+        $this->getLogger(__METHOD__)->error('basket', $basket);
         // Get the customer billing and shipping details
         $billingAddressId = $basket->customerInvoiceAddressId;
         $shippingAddressId = $basket->customerShippingAddressId;
