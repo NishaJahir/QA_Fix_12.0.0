@@ -57,7 +57,7 @@ class NovalnetPaymentMethodReinitializePayment
             } else {
                 $basketRepository->load()->basketAmount = $order['amounts'][0]['invoiceTotal'];
             }
-            
+            $paymentService->logger('amount', $basketRepository->load()->basketAmount);
             $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']));
             
             // Set the payment request parameters into session
