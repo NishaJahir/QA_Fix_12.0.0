@@ -157,7 +157,7 @@ class PaymentHelper
             NovalnetPaypalPaymentMethod::PAYMENT_KEY => NovalnetPaypalPaymentMethod::class,
             NovalnetPostfinanceCardPaymentMethod::PAYMENT_KEY => NovalnetPostfinanceCardPaymentMethod::class,
             NovalnetPostfinanceEfinancePaymentMethod::PAYMENT_KEY => NovalnetPostfinanceEfinancePaymentMethod::class,
-            NovalnetBancontactPaymentMethod::PAYMENT_KEY => NovalnetBancontctPaymentMethod::class,
+            NovalnetBancontactPaymentMethod::PAYMENT_KEY => NovalnetBancontactPaymentMethod::class,
             NovalnetMultibancoPaymentMethod::PAYMENT_KEY => NovalnetMultibancoPaymentMethod::class,
             NovalnetOnlineBankTransferPaymentMethod::PAYMENT_KEY => NovalnetOnlineBankTransferPaymentMethod::class,
             NovalnetAlipayPaymentMethod::PAYMENT_KEY => NovalnetAlipayPaymentMethod::class,
