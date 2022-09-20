@@ -1,0 +1,39 @@
+{# Load the css #}
+<link rel="stylesheet" href="{{plugin_path('Novalnet')}}/css/novalnet_ui.css">
+
+{# Initialize the payment Id and payment status}
+{% set paymentId = 0 %}
+{% set paidStatus = '' %}
+
+{# Set the order property #}
+{% set orderProperties = order.properties %}
+
+{# Loop the order orderProperties #}
+{% for orderProperty in orderProperties %}
+    {% if orderProperty.typeId == 3 %}
+        {% set paymentId = orderProperty.value %}
+    {% endif %}
+    {% if orderProperty.typeId == 4 %}
+        {% set paidStatus = orderProperty.value %}
+    {% endif %}
+{% endfor %}
+
+{% if (paymentId == paymentMethodId) and (paidStatus != 'fullyPaid') %}
+    {% set display = "block" %}
+{% else %}
+    {% set display = "none" %}
+{% endif %}
+
+{# Check if it is Novalnet Payments then dispay the Reinit payment button in the order confirmation page #}
+{% if 'novalnet' in paymentKey %}
+    {% if services.template.isCurrentTemplate('tpl.confirmation') %}
+        <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{display}};">
+            <strong class="col-xs-6 col-sm-5"></strong>
+            <span class="col-xs-6 col-sm-7">
+                <a class="payment-confirmation-btn">
+                    <span>{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</span>
+                </a>
+            </span>
+        </div>
+    {% endif %}
+{% endif %}
