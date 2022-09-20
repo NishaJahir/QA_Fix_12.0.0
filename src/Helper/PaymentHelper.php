@@ -94,13 +94,6 @@ class PaymentHelper
      * @var PaymentOrderRelationRepositoryContract
      */
     private $paymentOrderRelationRepository;
-     
-    
-    
-    /**
-     * @var TransactionService
-     */
-    private $transactionService;
     
     /**
      * Constructor.
@@ -111,8 +104,6 @@ class PaymentHelper
      * @param PaymentRepositoryContract $paymentRepository
      * @param OrderRepositoryContract $orderRepository
      * @param PaymentOrderRelationRepositoryContract $paymentOrderRelationRepository
-   
-     * @param TransactionService $transactionService
      */
     public function __construct(PaymentMethodRepositoryContract $paymentMethodRepository,
                                 AddressRepositoryContract $addressRepository,
@@ -120,8 +111,6 @@ class PaymentHelper
                                 PaymentRepositoryContract $paymentRepository,
                                 OrderRepositoryContract $orderRepository,
                                 PaymentOrderRelationRepositoryContract $paymentOrderRelationRepository
-                              
-                                
                                )
     {
         $this->paymentMethodRepository = $paymentMethodRepository;
@@ -130,7 +119,6 @@ class PaymentHelper
         $this->paymentRepository       = $paymentRepository;
         $this->orderRepository         = $orderRepository;
         $this->paymentOrderRelationRepository = $paymentOrderRelationRepository;
-       
     }
     
     /**
