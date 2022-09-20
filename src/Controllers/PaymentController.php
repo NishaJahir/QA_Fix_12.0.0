@@ -190,6 +190,6 @@ class PaymentController extends Controller
      */
     public function directPaymentProcess()
     {
-        return $this->paymentService->performServerCall();
+        $this->paymentService->performServerCall();
     }
 }
