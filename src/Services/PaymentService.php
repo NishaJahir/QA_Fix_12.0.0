@@ -457,12 +457,13 @@ class PaymentService
     {
         $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
         $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
+        $this->getLogger(__METHOD__)->error('Payment Request', $paymentRequestData);
         $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
         $privateKey = $this->settingsService->getNnPaymentSettingsValue('novalnet_private_key');
         $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
         $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
         $nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
-        
+        $this->getLogger(__METHOD__)->error('Payment Response', $paymentResponseData);
         // Do redirect if the redirect URL is present
         if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect))) {
             return $paymentResponseData;
