@@ -1,0 +1,40 @@
+/**
+ * This module is used for real time processing of
+ * Novalnet payment module of customers.
+ * This free contribution made by request.
+ * 
+ * If you have found this script useful a small
+ * recommendation as well as a comment on merchant form
+ * would be greatly appreciated.
+ *
+ * @author       Novalnet AG
+ * @copyright(C) Novalnet
+ * All rights reserved. https://www.novalnet.de/payment-plugins/kostenlos/lizenz
+ */
+ 
+{# Render the Novalnet transaction details #}
+<div class="row">
+    <strong class="col-6 col-sm-5">{{trans("Novalnet::PaymentMethod.novalnet_details")}}</strong>
+    <span class="col-6 col-sm-7">{{transactionComments|raw}}</span>
+    
+   {# Display the cashpayment button #}
+   {% if cashpaymentToken is not empty and services.template.isCurrentTemplate('tpl.confirmation') %}
+    <button id="barzahlen_button" class="bz-checkout-btn" onclick="javascript:bzCheckout.display();">{{trans("Novalnet::PaymentMethod.barzahlen_token")}}</button>
+    
+    <style type="text/css">
+        #bz-checkout-modal {position: fixed !important;}
+        #barzahlen_button {width: max-content; margin-top: -30px !important; margin-bottom: 5% !important; margin-left: 20px !important;}
+    </style>
+    
+    <script src="{{cashpaymentUrl}}"
+            class="bz-checkout"
+            data-token="{{cashpaymentToken}}"
+            data-auto-display="true">
+    </script>
+  {% endif %}
+  
+</div>
+
+
+
+

@@ -1,0 +1,51 @@
+/**
+ * This module is used for real time processing of
+ * Novalnet payment module of customers.
+ * This free contribution made by request.
+ * 
+ * If you have found this script useful a small
+ * recommendation as well as a comment on merchant form
+ * would be greatly appreciated.
+ *
+ * @author       Novalnet AG
+ * @copyright(C) Novalnet
+ * All rights reserved. https://www.novalnet.de/payment-plugins/kostenlos/lizenz
+ */
+ 
+{# Set the post data #}
+<input type="hidden" name="nn_paymentmethod_key" id="nn_paymentmethod_key" value="{{nnPaymentMethodKey}}">
+<input type="hidden" name="nn_paymentmethod_id" id="nn_paymentmethod_id" value="{{nnPaymentMethodId}}">
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function() {
+        {# Define variables #}
+        var nnPaymentMethodId = jQuery('#nn_paymentmethod_id').val();
+        var nnPaymentMethodKey = jQuery('#nn_paymentmethod_key').val();
+        
+        {# Display the Novalnet ApplePay payment if it is IOS Device #}
+        if(nnPaymentMethodKey == 'NOVALNET_APPLEPAY') {
+           var iosDevicce = iOS();
+           var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+           if(iosDevicce && isSafari) {
+            jQuery('li[data-id="'+nnPaymentMethodId+'"]').show();
+           } else {
+            jQuery('li[data-id="'+nnPaymentMethodId+'"]').hide();
+           }
+        }
+    });
+  
+function iOS() {
+    return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+    ].includes(navigator.platform)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+</script>
