@@ -587,6 +587,7 @@ class PaymentService
         
         $additionalInfo = $this->additionalPaymentInfo($paymentResponseData);
         
+        $orderTotalAmount = 0;
         // Set the order total amount for Refund and Credit followups
         if(!empty($refundOrderTotalAmount) || !empty($creditOrderTotalAmount)) {
             $orderTotalAmount = $refundOrderTotalAmount ?? $creditOrderTotalAmount;
@@ -594,9 +595,9 @@ class PaymentService
 
          $transactionData = [
             'order_no'         => $paymentResponseData['transaction']['order_no'],
-            'amount'           => $orderTotalAmount ?? $paymentResponseData['transaction']['amount'],
+            'amount'           => !empty($orderTotalAmount) ? $orderTotalAmount : $paymentResponseData['transaction']['amount'],
             'callback_amount'  => $paymentResponseData['transaction']['refund']['amount'] ?? $paymentResponseData['transaction']['amount'],
-            'tid'              => $parentTid ?? $paymentResponseData['transaction']['tid'],
+            'tid'              => !empty($parentTid) ? $parentTid : $paymentResponseData['transaction']['tid'],
             'ref_tid'          => $paymentResponseData['transaction']['refund']['tid'] ?? $paymentResponseData['transaction']['tid'],
             'payment_name'     => $paymentResponseData['payment_method'],
             'additional_info'  => $additionalInfo ?? 0,
