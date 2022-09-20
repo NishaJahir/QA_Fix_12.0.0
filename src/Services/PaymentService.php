@@ -909,7 +909,7 @@ class PaymentService
         }
         
         // Form the bank details for invoice payments
-        if(in_array($transactionData['paymentName'], ['novalnet_invoice', 'novalnet_prepayment', 'novalnet_guaranteed_invoice'])) {
+        if(in_array($transactionData['paymentName'], ['novalnet_invoice', 'novalnet_prepayment', 'novalnet_guaranteed_invoice']) && in_array($transactionData['tx_status'], ['PENDING', 'CONFIRMED'])) {
             $transactionComments .= PHP_EOL . $this->getBankDetailsInformation($transactionData);
         }
         
