@@ -1149,4 +1149,8 @@ class PaymentService
         
         return $refundStatus;
     }
+    
+    public function logger($k, $v){
+        $this->getLogger(__METHOD__)->error($k, $v);
+    }
 }
