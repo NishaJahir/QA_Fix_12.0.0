@@ -30,9 +30,7 @@
         <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{display}};">
             <strong class="col-xs-6 col-sm-5"></strong>
             <span class="col-xs-6 col-sm-7">
-                <a class="payment-confirmation-btn">
-                    <span>{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</span>
-                </a>
+                <a class="payment-confirmation-btn" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
             </span>
         </div>
     {% endif %}
