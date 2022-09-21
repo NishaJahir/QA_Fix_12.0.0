@@ -202,7 +202,6 @@ class PaymentService
      */
     public function generatePaymentParams(Basket $basket, $paymentKey = '')
     {
-        $this->getLogger(__METHOD__)->error('basket', $basket);
         // Get the customer billing and shipping details
         $billingAddressId = $basket->customerInvoiceAddressId;
         $shippingAddressId = $basket->customerShippingAddressId;
@@ -232,6 +231,11 @@ class PaymentService
             $basket->shippingAmount = $basket->shippingAmountNet;
             $basket->basketAmount = $basket->basketAmountNet;
         }
+        
+        // Get order amount from session while the reiniate payment process
+        $orderAmount = $this->sessionStorage->getPlugin()->getValue('orderAmount');
+        
+        $this->getLogger(__METHOD__)->error('basket', $basket);
         
         // Build the Payment Request Parameters
         $paymentRequestData = [];
@@ -289,7 +293,7 @@ class PaymentService
         // Building the transaction Data
         $paymentRequestData['transaction'] = [
                                                'test_mode' => ($testModeKey == true) ? 1 : 0,
-                                               'amount'    => $this->paymentHelper->ConvertAmountToSmallerUnit($basket->basketAmount),
+                                               'amount'    => !empty($orderAmount) ? $orderAmount : $this->paymentHelper->ConvertAmountToSmallerUnit($basket->basketAmount),
                                                'currency'  => $basket->currency,
                                                'system_name'   => 'Plentymarkets',
                                                'system_version' => NovalnetConstants::PLUGIN_VERSION,
