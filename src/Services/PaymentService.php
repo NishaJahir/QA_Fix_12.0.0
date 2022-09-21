@@ -572,6 +572,7 @@ class PaymentService
             $this->sessionStorage->getPlugin()->setValue('novalnetCheckoutUrl', $nnPaymentData['transaction']['checkout_js']);        
         }
         
+        $this->getLogger(__METHOD__)->error('nnPaymentData', $nnPaymentData);
         // Insert payment response into Novalnet table
         $this->insertPaymentResponseIntoNnDb($nnPaymentData);
         
