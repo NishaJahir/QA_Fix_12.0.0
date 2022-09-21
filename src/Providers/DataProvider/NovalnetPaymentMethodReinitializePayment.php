@@ -51,15 +51,16 @@ class NovalnetPaymentMethodReinitializePayment
             if(count($order['amounts']) > 1) {
                 foreach($order['amounts'] as $orderAmount) {
                     if($basketRepository->load()->currency == $orderAmount['currency']) {
-                        $basketRepository->load()->basketAmount = $orderAmount['invoiceTotal'];
+                        $invoiceAmount = $orderAmount['invoiceTotal'];
                     }
                 }
-                $paymentService->logger('if', $basketRepository->load()->basketAmount);
+                $paymentService->logger('if', $invoiceAmount);
             } else {
-                $basketRepository->load()->basketAmount = $order['amounts'][0]['invoiceTotal'];
-                $paymentService->logger('else', $basketRepository->load()->basketAmount);
+                        $invoiceAmount = $order['amounts'][0]['invoiceTotal'];
+                $paymentService->logger('else', $invoiceAmount);
             }
             $paymentService->logger('order obj', $order);
+            $paymentService->logger('invoice amount', $invoiceAmount);
             
             $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']));
             
