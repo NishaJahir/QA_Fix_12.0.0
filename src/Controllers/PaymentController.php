@@ -93,7 +93,7 @@ class PaymentController extends Controller
      * Novalnet redirects to this page if the payment was executed successfully
      *
      */
-    public function paymentResponse() 
+    public function paymentResponse()
     {
         
         // Get the initial payment call response
@@ -119,6 +119,8 @@ class PaymentController extends Controller
                 } else {
                     $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);    
                 }
+            } else {
+                $this->paymentService->pushNotification($paymentResponseData['status_text'], 'error', 100);
             }
            
             $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
