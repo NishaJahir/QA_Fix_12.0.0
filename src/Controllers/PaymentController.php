@@ -102,23 +102,25 @@ class PaymentController extends Controller
         // Checksum validation for redirects
         if(!empty($paymentResponseData['tid'])) {
             
-            // Checksum validation and transaction status call to retrieve the full response
-            $paymentResponseData = $this->paymentService->validateChecksumAndGetTxnStatus($paymentResponseData);
-            
-            // Checksum validation is failure return back to the customer to confirmation page with error message
-            if(!empty($paymentResponseData['nn_checksum_invalid'])) {
-                $this->paymentService->pushNotification($paymentResponseData['nn_checksum_invalid'], 'error', 100);
-                return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+            if($paymentResponseData['status'] == 'SUCCESS') {
+                // Checksum validation and transaction status call to retrieve the full response
+                $paymentResponseData = $this->paymentService->validateChecksumAndGetTxnStatus($paymentResponseData);
+
+                // Checksum validation is failure return back to the customer to confirmation page with error message
+                if(!empty($paymentResponseData['nn_checksum_invalid'])) {
+                    $this->paymentService->pushNotification($paymentResponseData['nn_checksum_invalid'], 'error', 100);
+                    return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+                }
+
+                $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
+
+                if($isPaymentSuccess) {
+                    $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'success', 100);
+                } else {
+                    $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);    
+                }
             }
-            
-            $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
-            
-            if($isPaymentSuccess) {
-                $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'success', 100);
-            } else {
-                $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);    
-            }
-            
+           
             $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
            
             // Set the payment response in the session for the further processings
@@ -126,12 +128,12 @@ class PaymentController extends Controller
             // Handle the further process to the order based on the payment response
             $this->paymentService->HandlePaymentResponse();
             
+            return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+            
         } else {
             $this->paymentService->pushNotification($paymentResponseData['status_text'], 'error', 100);  
             return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
         }
-       
-        return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
     }
     
     /**
