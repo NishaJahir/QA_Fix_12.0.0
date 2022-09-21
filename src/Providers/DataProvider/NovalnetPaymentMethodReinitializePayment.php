@@ -19,7 +19,7 @@ use Plenty\Plugin\Templates\Twig;
 use Novalnet\Services\PaymentService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
-
+use Novalnet\Helper\PaymentHelper;
 
 class NovalnetPaymentMethodReinitializePayment
 {
@@ -29,6 +29,7 @@ class NovalnetPaymentMethodReinitializePayment
         $paymentService = pluginApp(PaymentService::class);
         $basketRepository = pluginApp(BasketRepositoryContract::class);
         $sessionStorage = pluginApp(FrontendSessionStorageFactoryContract::class);
+        $paymentHelper = pluginApp(PaymentHelper::class);
         
         // Get the Novalnet payment method Id
         foreach($order['properties'] as $orderProperty) {
@@ -52,11 +53,11 @@ class NovalnetPaymentMethodReinitializePayment
             if(count($order['amounts']) > 1) {
                 foreach($order['amounts'] as $orderAmount) {
                     if($basketRepository->load()->currency == $orderAmount['currency']) {
-                        $invoiceAmount = $orderAmount['invoiceTotal'];
+                        $invoiceAmount = $paymentHelper->ConvertAmountToSmallerUnit($orderAmount['invoiceTotal']);
                     }
                 }
             } else {
-                        $invoiceAmount = $order['amounts'][0]['invoiceTotal'];
+                        $invoiceAmount = $paymentHelper->ConvertAmountToSmallerUnit($order['amounts'][0]['invoiceTotal']);
             }
             $sessionStorage->getPlugin()->setValue('orderAmount', $invoiceAmount);
             
