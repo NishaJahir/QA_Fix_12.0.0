@@ -59,14 +59,16 @@ class NovalnetPaymentMethodReinitializePayment
             } else {
                         $invoiceAmount = $paymentHelper->ConvertAmountToSmallerUnit($order['amounts'][0]['invoiceTotal']);
             }
+            
+            // Set the required values into session
             $sessionStorage->getPlugin()->setValue('orderAmount', $invoiceAmount);
+            $sessionStorage->getPlugin()->setValue('nnOrderNo', $order['id']);
+            $sessionStorage->getPlugin()->setValue('paymentkey', strtoupper($transactionDetails['paymentName']));
             
             $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']));
             
             // Set the payment request parameters into session
             $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
-            $sessionStorage->getPlugin()->setValue('nnOrderNo', $order['id']);
-            $sessionStorage->getPlugin()->setValue('paymentkey', strtoupper($transactionDetails['paymentName']));
         }
 
         // If the Novalnet payments are rejected do the reinitialize payment
