@@ -412,6 +412,8 @@ class PaymentHelper
             /** @var Payment $payment */
             $payment = pluginApp(\Plenty\Modules\Payment\Models\Payment::class);
             
+            $paymentResponseData['result']['status'] = $paymentResponseData['result']['status'] ?? $paymentResponseData['status'];
+            
             $payment->mopId           = (int) $paymentResponseData['mop'];
             $payment->transactionType = Payment::TRANSACTION_TYPE_BOOKED_POSTING;
             $payment->status          = (in_array($paymentResponseData['transaction']['status'], ['PENDING', 'ON_HOLD']) && $paymentResponseData['transaction']['payment_type'] != 'INVOICE') ? Payment::STATUS_AWAITING_APPROVAL : ($paymentResponseData['result']['status'] == 'FAILURE' ? Payment::STATUS_CANCELED : Payment::STATUS_CAPTURED);
