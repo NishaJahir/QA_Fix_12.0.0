@@ -424,7 +424,7 @@ class PaymentHelper
             $txnStatus = $paymentResponseData['transaction']['status'] ?? $paymentResponseData['result']['status'];
             
             // Set the booking text
-            $bookingText = isset($paymentResponseData['bookingText']) ? $paymentResponseData['bookingText'] : $paymentResponseData['transaction']['tid'];
+            $bookingText = isset($paymentResponseData['bookingText']) ? $paymentResponseData['bookingText'] : (!empty($paymentResponseData['transaction']['tid']) ? $paymentResponseData['transaction']['tid'] : $paymentResponseData['tid']);
             
             // Set the Refund status to the payment if refund was execute
             if(isset($paymentResponseData['refund'])) {
