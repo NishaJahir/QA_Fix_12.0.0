@@ -199,7 +199,7 @@ class PaymentController extends Controller
         
         $paymentResponseData = $this->paymentService->performServerCall();
         $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
-        if($paymentService->isRedirectPayment($paymentKey)) {
+        if($this->paymentService->isRedirectPayment($paymentKey)) {
             if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
                 // Transaction secret used for the later checksum verification
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
