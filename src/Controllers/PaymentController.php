@@ -196,6 +196,19 @@ class PaymentController extends Controller
      */
     public function directPaymentProcess()
     {
-        $this->paymentService->performServerCall();
+        
+        $paymentResponseData = $this->paymentService->performServerCall();
+        $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
+        if($paymentService->isRedirectPayment($paymentKey)) {
+            if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
+                // Transaction secret used for the later checksum verification
+                $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
+                return $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
+            } else {
+                // Redirect to confirmation page
+                $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);  
+                return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+            }
+        }
     }
 }
