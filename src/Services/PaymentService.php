@@ -610,8 +610,8 @@ class PaymentService
             'order_no'         => $paymentResponseData['transaction']['order_no'],
             'amount'           => !empty($orderTotalAmount) ? $orderTotalAmount : $paymentResponseData['transaction']['amount'],
             'callback_amount'  => $paymentResponseData['transaction']['refund']['amount'] ?? $paymentResponseData['transaction']['amount'],
-            'tid'              => !empty($parentTid) ? $parentTid : $paymentResponseData['transaction']['tid'],
-            'ref_tid'          => $paymentResponseData['transaction']['refund']['tid'] ?? $paymentResponseData['transaction']['tid'],
+            'tid'              => !empty($parentTid) ? $parentTid : (!empty($paymentResponseData['transaction']['tid']) ? $paymentResponseData['transaction']['tid'] : $paymentResponseData['tid']),
+            'ref_tid'          => $paymentResponseData['transaction']['refund']['tid'] ?? (!empty($paymentResponseData['transaction']['tid']) ? $paymentResponseData['transaction']['tid'] : $paymentResponseData['tid']),
             'payment_name'     => $paymentResponseData['payment_method'],
             'additional_info'  => $additionalInfo ?? 0,
         ];
