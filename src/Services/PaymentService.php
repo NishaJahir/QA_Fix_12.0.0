@@ -469,7 +469,7 @@ class PaymentService
         $nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
         
         // Merge the request and response paramters for further processing
-        $paymentResponseData = array_merge_recursive($paymentRequestData['paymentRequestData'], $paymentResponseData);
+        $paymentResponseData = array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData);
         $this->getLogger(__METHOD__)->error('Payment Response session', $paymentResponseSession);
         
         // Set the payment response in the session for the further processings
@@ -568,6 +568,12 @@ class PaymentService
         
         $nnPaymentData['mop']            = $this->sessionStorage->getPlugin()->getValue('mop');
         $nnPaymentData['payment_method'] = strtolower($this->paymentHelper->getPaymentKeyByMop($nnPaymentData['mop']));
+        
+        // If Order No is not received from the payment response assign the from the session
+        if(empty($nnPaymentData['transaction']['order_no'])) {
+            $nnPaymentData['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
+             $this->sessionStorage->getPlugin()->setValue('nnOrderNo', null);
+        }
         
         // Set the cashpayment token to session      
         if($nnPaymentData['payment_method'] == 'novalnet_cashpayment' && !empty($nnPaymentData['transaction']['checkout_token']) && $nnPaymentData['transaction']['status'] == 'PENDING') {
