@@ -98,7 +98,7 @@ class PaymentController extends Controller
         
         // Get the initial payment call response
         $paymentResponseData = $this->request->all();
-        $this->getLogger(__METHOD__)->error('response', $paymentResponseData);
+       
         // Checksum validation for redirects
         if(!empty($paymentResponseData['tid'])) {
             
@@ -124,7 +124,7 @@ class PaymentController extends Controller
             }
            
             $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
-            $this->getLogger(__METHOD__)->error('session response', $paymentRequestData);
+            $this->getLogger(__METHOD__)->error('session response123', $paymentRequestData);
             // Set the payment response in the session for the further processings
             //$this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
             // Handle the further process to the order based on the payment response
