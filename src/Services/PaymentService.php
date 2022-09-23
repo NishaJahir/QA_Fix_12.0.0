@@ -467,16 +467,11 @@ class PaymentService
         $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
         $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
         $nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
-        
-        // Merge the request and response paramters for further processing
-        $paymentResponseData = array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData);
-        $this->getLogger(__METHOD__)->error('Payment Response session', $paymentResponseSession);
-        
-        // Set the payment response in the session for the further processings
-        $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentResponseData);
-        
+       
         // Do redirect if the redirect URL is present
         if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect))) {
+            // Set the payment response in the session for the further processings
+            $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData['paymentRequestData']);
             return $paymentResponseData;
         } else {
             // Push notification to customer regarding the payment response
@@ -485,6 +480,8 @@ class PaymentService
             } else {
                 $this->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
             }
+            // Set the payment response in the session for the further processings
+            $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
             // Handle the further process to the order based on the payment response
             $this->HandlePaymentResponse();
         }
