@@ -470,10 +470,10 @@ class PaymentService
         $nnDoRedirect = $this->sessionStorage->getPlugin()->getValue('nnDoRedirect');
         $this->getLogger(__METHOD__)->error('Payment Response', $paymentResponseData);
         // Merge the request and response paramters for further processing
-        $paymentResponseData = array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData);
-        
+        $paymentResponseSession = array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData);
+        $this->getLogger(__METHOD__)->error('Payment Response session', $paymentResponseSession);
         // Set the payment response in the session for the further processings
-        $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentResponseData);
+        $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentResponseSession);
         
         // Do redirect if the redirect URL is present
         if($isPaymentSuccess && ($this->isRedirectPayment($paymentKey) || !empty($nnDoRedirect))) {
