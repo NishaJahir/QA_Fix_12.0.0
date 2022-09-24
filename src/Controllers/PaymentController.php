@@ -205,7 +205,7 @@ class PaymentController extends Controller
             if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
                 // Transaction secret used for the later checksum verification
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
+                return $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
             } else {
                 // Redirect to confirmation page
                 $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);  
