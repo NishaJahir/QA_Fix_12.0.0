@@ -198,17 +198,16 @@ class PaymentController extends Controller
     {
         
         $paymentResponseData = $this->paymentService->performServerCall();
-        $this->getLogger(__METHOD__)->error('controller req', $paymentResponseData);
         $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
-        $this->getLogger(__METHOD__)->error('controller payment key', $paymentKey);
+       
         if($this->paymentService->isRedirectPayment($paymentKey)) {
-            $this->getLogger(__METHOD__)->error('if controller req', $paymentResponseData);
             if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
                 // Transaction secret used for the later checksum verification
+                $this->getLogger(__METHOD__)->error('if res', $paymentResponseData);
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                $this->response->redirectTo($paymentResponseData['result']['redirect_url']);
+                header('Location: ' . $paymentResponseData['result']['redirect_url']);
+                exit;
             } else {
-                $this->getLogger(__METHOD__)->error('else controller req', $paymentResponseData);
                 // Redirect to confirmation page
                 $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);  
                 return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
