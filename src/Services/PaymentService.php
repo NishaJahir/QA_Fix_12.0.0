@@ -577,6 +577,12 @@ class PaymentService
             $this->sessionStorage->getPlugin()->setValue('novalnetCheckoutToken', $nnPaymentData['transaction']['checkout_token']);
             $this->sessionStorage->getPlugin()->setValue('novalnetCheckoutUrl', $nnPaymentData['transaction']['checkout_js']);        
         }
+	    
+	// Update the Order No to the order if the payment before order completion set as 'No'
+	if($this->settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
+	    $paymentResponseData = $this->sendPostbackCall($nnPaymentData);
+	    $nnPaymentData = array_merge($nnPaymentData, $paymentResponseData);
+	}
         
         $this->getLogger(__METHOD__)->error('nnPaymentData', $nnPaymentData);
         // Insert payment response into Novalnet table
@@ -584,6 +590,8 @@ class PaymentService
         
         // Create a plenty payment to the order
         $this->paymentHelper->createPlentyPaymentToNnOrder($nnPaymentData);
+	    
+	
     }
     
     /**
@@ -674,6 +682,24 @@ class PaymentService
         }
            
         return json_encode($additionalInfo);
+    }
+	
+    /**
+     * Send postback call to server for updating the order number for the transaction
+     *
+     * @param array $paymentRequestData
+     *
+     * @return array
+     */
+    public function sendPostbackCall($paymentRequestData)
+    {
+        $postbackData = [];
+	$postbackData['transaction']['tid'] = $paymentRequestData['transaction']['tid'];
+	$postbackData['transaction']['order_no'] = $paymentRequestData['transaction']['order_no'];
+
+        $privateKey = $this->settingsService->getNnPaymentSettingsValue('novalnet_private_key');
+        $paymentResponseData = $this->paymentHelper->executeCurl($postbackData, NovalnetConstants::TXN_UPDATE, $privateKey);
+	return $paymentResponseData;
     }
     
     /**
