@@ -187,6 +187,12 @@ class NovalnetAssistant extends WizardProvider
                                     'tooltip' => 'NovalnetAssistant.novalnetClientKeyTooltip',
                                     'required' => true
                                 ]
+                            ],
+                            'novalnetOrderCreation' => [
+                                'type' => 'checkbox',
+                                'options' => [
+                                    'name' => 'NovalnetAssistant.novalnetOrderCreationLabel'
+                                ]
                             ]
                         ]
                     ]
