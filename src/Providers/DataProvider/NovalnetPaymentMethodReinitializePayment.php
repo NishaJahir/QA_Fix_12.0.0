@@ -69,6 +69,12 @@ class NovalnetPaymentMethodReinitializePayment
             
             // Set the payment request parameters into session
             $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
+            
+            // Get the Credit card form loading parameters
+            if ($transactionDetails['paymentName'] == 'novalnet_cc') {
+                 $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $transactionDetails['paymentName']);
+                 $ccCustomFields = $paymentService->getCcFormFields();
+            }
         }
 
         // If the Novalnet payments are rejected do the reinitialize payment
@@ -76,7 +82,11 @@ class NovalnetPaymentMethodReinitializePayment
             return $twig->render('Novalnet::NovalnetPaymentMethodReinitializePayment', [
                                 'order' => $order,
                                 'paymentMethodId' => $mopId,
-                                'paymentKey' => $transactionDetails['paymentName']
+                                'paymentMopKey' => $transactionDetails['paymentName']
+                                'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl(),
+                                'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . strtolower($paymentKey)),
+                                'ccFormDetails' => !empty($ccFormDetails) ? $ccFormDetails : '',
+                                'ccCustomFields' => !empty($ccCustomFields) ? $ccCustomFields : '',
                                 ]);
         } else {
             return '';
