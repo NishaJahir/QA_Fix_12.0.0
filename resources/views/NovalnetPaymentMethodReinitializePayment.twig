@@ -44,13 +44,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       {% if paymentKey == 'novalnet_sepa' %}
-        {% include "Novalnet::PaymentForm.novalnetSepa" %}
+        {% include "Novalnet::PaymentForm.NovalnetSepa" %}
       {% elseif paymentKey == 'novalnet_guaranteed_invoice' %}
-        {% include "Novalnet::PaymentForm.novalnetGuaranteedInvoice" %}
+        {% include "Novalnet::PaymentForm.NovalnetGuaranteedInvoice" %}
       {% elseif paymentKey == 'novalnet_guaranteed_sepa' %}
-        {% include "Novalnet::PaymentForm.novalnetGuaranteedSepa" %}
+        {% include "Novalnet::PaymentForm.NovalnetGuaranteedSepa" %}
       {% elseif paymentKey == 'novalnet_cc' %}
-        {% include "Novalnet::PaymentForm.novalnetCc" %}
+        {% include "Novalnet::PaymentForm.NovalnetCc" %}
       {% endif %}
     </div>
   </div>
