@@ -82,7 +82,7 @@ class NovalnetPaymentMethodReinitializePayment
             return $twig->render('Novalnet::NovalnetPaymentMethodReinitializePayment', [
                                 'order' => $order,
                                 'paymentMethodId' => $mopId,
-                                'paymentMopKey' => $transactionDetails['paymentName'],
+                                'paymentMopKey' => strtoupper($transactionDetails['paymentName']),
                                 'reinitializePayment' => 1,
                                 'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl(),
                                 'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . $transactionDetails['paymentName']),
