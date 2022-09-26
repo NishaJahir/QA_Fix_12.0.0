@@ -43,12 +43,10 @@
 <div class="modal" tabindex="-1" role="dialog" id="novalnetPaymentForm">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      {% if paymentKey == 'novalnet_sepa' %}
+      {% if paymentKey in ['novalnet_sepa', 'novalnet_guaranteed_sepa'] %}
         {% include "Novalnet::PaymentForm.NovalnetSepa" %}
       {% elseif paymentKey == 'novalnet_guaranteed_invoice' %}
         {% include "Novalnet::PaymentForm.NovalnetGuaranteedInvoice" %}
-      {% elseif paymentKey == 'novalnet_guaranteed_sepa' %}
-        {% include "Novalnet::PaymentForm.NovalnetGuaranteedSepa" %}
       {% elseif paymentKey == 'novalnet_cc' %}
         {% include "Novalnet::PaymentForm.NovalnetCc" %}
       {% endif %}
