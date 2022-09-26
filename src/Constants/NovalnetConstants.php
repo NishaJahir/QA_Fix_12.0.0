@@ -30,4 +30,5 @@ class NovalnetConstants
     const PAYMENT_CAPTURE_URL = 'https://payport.novalnet.de/v2/transaction/capture';
     const PAYMENT_VOID_URL = 'https://payport.novalnet.de/v2/transaction/cancel';
     const PAYMENT_REFUND_URL = 'https://payport.novalnet.de/v2/transaction/refund';
+    const TXN_UPDATE = 'https://payport.novalnet.de/v2/transaction/update';
 }
