@@ -46,6 +46,7 @@ class NovalnetAssistantSettingsHandler implements WizardSettingsHandler
             'novalnet_private_key' => $data['novalnetAccessKey'] ?? '',
             'novalnet_tariff_id' => $data['novalnetTariffId'] ?? '',
             'novalnet_client_key' => $data['novalnetClientKey'] ?? '',
+            'novalnet_order_creation' => $data['novalnetOrderCreation'] ?? '',
             'novalnet_webhook_testmode' => $data['novalnetWebhookTestMode'] ?? '',
             'novalnet_webhook_email_to' => $data['novalnetWebhookEmailTo'] ?? '',
         ];
