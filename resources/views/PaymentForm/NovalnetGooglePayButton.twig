@@ -11,7 +11,10 @@
 
   {# Set the client key#}
   <input type="hidden" name="nn_client_key" id="nn_client_key" value="{{clientKey}}">
-
+  {# Set the reinitialization is used #}
+        {% if reinitializePayment is not empty %}
+            <input type="hidden" id="nn_reinitializePayment" name="nn_reinitializePayment" value="{{reinitializePayment}}">
+        {% endif %}
   {# Google Pay container #}
   <div id="nn_google_pay" data-country="{{countryCode}}" data-total-amount="{{orderTotalAmount}}" data-order-lang="{{orderLang}}" data-currency="{{orderCurrency}}"></div>
 </form>
