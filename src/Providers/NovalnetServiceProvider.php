@@ -174,6 +174,8 @@ class NovalnetServiceProvider extends ServiceProvider
                     }
                 }
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
+		
+		
                 $event->setValue($content);
                 $event->setType($contentType);
             }            
