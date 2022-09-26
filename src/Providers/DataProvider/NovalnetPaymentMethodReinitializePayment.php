@@ -83,6 +83,7 @@ class NovalnetPaymentMethodReinitializePayment
                                 'order' => $order,
                                 'paymentMethodId' => $mopId,
                                 'paymentMopKey' => $transactionDetails['paymentName'],
+                                'reinitializePayment' => 1,
                                 'nnPaymentProcessUrl' => $paymentService->getProcessPaymentUrl(),
                                 'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . strtolower($paymentKey)),
                                 'ccFormDetails' => !empty($ccFormDetails) ? $ccFormDetails : '',
