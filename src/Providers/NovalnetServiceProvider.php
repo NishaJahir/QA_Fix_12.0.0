@@ -182,8 +182,7 @@ class NovalnetServiceProvider extends ServiceProvider
 		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
 	           $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
 		   $privateKey = $settingsService->getNnPaymentSettingsValue('novalnet_private_key');
-        	   $paymentResponseData = $paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
-		   $sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
+        	   $paymentResponseData = $paymentService->performServerCall();
 		}
 		
                 $event->setValue($content);
