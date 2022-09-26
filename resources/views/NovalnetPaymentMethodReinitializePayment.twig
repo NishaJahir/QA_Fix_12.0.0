@@ -30,7 +30,7 @@
         <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{display}};">
             <strong class="col-xs-6 col-sm-5"></strong>
             <span class="col-xs-6 col-sm-7">
-                {% if paymentKey in ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA', 'NOVALNET_CC'] %}
+                {% if paymentKey in ['novalnet_sepa', 'novalnet_guaranteed_invoice', 'novalnet_guaranteed_sepa', 'novalnet_cc'] %}
                     <a class="payment-confirmation-btn btn" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% else %}
                     <a class="payment-confirmation-btn btn" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
