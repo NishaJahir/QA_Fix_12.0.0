@@ -186,8 +186,13 @@ class PaymentController extends Controller
         // Set the payment requests in the session for the further processings
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
         
-        // Call the shop executePayment function
-        return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
+        if(!empty($paymentRequestPostData['nn_reinitializePayment'])) {
+            $this->paymentService->performServerCall();
+            return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
+        } else {
+            // Call the shop executePayment function
+            return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
+        }
     }
     
     /**
