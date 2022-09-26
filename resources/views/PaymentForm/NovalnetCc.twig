@@ -22,7 +22,10 @@
         <input type="hidden" id="nn_cc3d_redirect" name="nn_cc3d_redirect">
         <input type="hidden" id="nn_cc_formdetails" name="nn_cc_formdetails" value="{{ccFormDetails|escape}}">
         <input type="hidden" id="nn_cc_formfields" name="nn_cc_formfields" value="{{ccCustomFields|escape}}"> 
-
+        {# Set the reinitialization is used #}
+        {% if reinit is not empty %}
+            <input type="hidden" id="nn_reinitializePayment" name="nn_reinitializePayment" value="{{reinitializePayment}}">
+        {% endif %}
         {# Load the Iframe #}
         <div class="loader"></div>
         <iframe id="nn_iframe" frameborder="0" scrolling="no" width="100%"></iframe>
