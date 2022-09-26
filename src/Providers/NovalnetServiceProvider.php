@@ -36,6 +36,7 @@ use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
 use Plenty\Modules\Order\Pdf\Events\OrderPdfGenerationEvent;
 use Plenty\Modules\Order\Pdf\Models\OrderPdfGeneration;
+use Plenty\Modules\Document\Models\Document;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Plugin\Log\Loggable;
 
@@ -279,29 +280,26 @@ class NovalnetServiceProvider extends ServiceProvider
 		$eventDispatcher->listen(
 			OrderPdfGenerationEvent::class,
 			function (OrderPdfGenerationEvent $event) use ($paymentService, $paymentHelper, $paymentRepository) {
-				
-			// If Novalnet Payments do the invoice PDF process
-			if($paymentHelper->getPaymentKeyByMop($event->getMop())) {
-				try {
-					/** @var Order $order */ 
-					$order = $event->getOrder();
-                    $this->getLogger(__METHOD__)->error('order pro', $order);
-					$payments = $paymentRepository->getPaymentsByOrderId($order->id);
-					// Get Novalnet transaction details from the Novalnet database table
-					$nnDbTxDetails = $paymentService->getDatabaseValues($order['id']);
-					if(!empty($nnDbTxDetails['plugin_version'])) {
-						$transactionComments = '';
-						$transactionComments .= $paymentService->displayTransactionComments($payments);
-						$orderPdfGenerationModel = pluginApp(OrderPdfGeneration::class);
-						$orderPdfGenerationModel->advice = $paymentHelper->getTranslatedText('novalnet_details'). PHP_EOL . $transactionComments;
-						if ($event->getDocType() == Document::INVOICE) { // Add the comments into Invoice PDF document
-							$event->addOrderPdfGeneration($orderPdfGenerationModel); 
-						}
+			/** @var Order $order */ 
+			$order = $event->getOrder();	
+			$this->getLogger(__METHOD__)->error('order pro', $order);
+			try {
+				$payments = $paymentRepository->getPaymentsByOrderId($order->id);
+				// Get Novalnet transaction details from the Novalnet database table
+				$nnDbTxDetails = $paymentService->getDatabaseValues($order->id);
+				if(!empty($nnDbTxDetails['plugin_version']) && strpos($nnDbTxDetails['paymentName'], 'novalnet') !== false) { // If Novalnet Payments do the invoice PDF process
+					$transactionComments = '';
+					$transactionComments .= $paymentService->displayTransactionComments($payments);
+					$orderPdfGenerationModel = pluginApp(OrderPdfGeneration::class);
+					$orderPdfGenerationModel->advice = $paymentHelper->getTranslatedText('novalnet_details'). PHP_EOL . $transactionComments;
+					if ($event->getDocType() == Document::INVOICE) { // Add the comments into Invoice PDF document
+						$event->addOrderPdfGeneration($orderPdfGenerationModel); 
 					}
-				} catch(\Exception $e) {
-                    $this->getLogger(__METHOD__)->error('Adding PDF comment failed for order ' . $order->id , $e);
-				} 
-			}
+				}
+			} catch(\Exception $e) {
+				$this->getLogger(__METHOD__)->error('Adding PDF comment failed for order ' . $order->id , $e);
+			} 
+			
 		});
 	}
 }
