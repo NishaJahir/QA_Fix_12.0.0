@@ -25,12 +25,12 @@
 {% endif %}
 
 {# Check if it is Novalnet Payments then dispay the Reinit payment button in the order confirmation page #}
-{% if 'novalnet' in paymentMopKey %}
+{% if 'NOVALNET' in paymentMopKey %}
     {% if services.template.isCurrentTemplate('tpl.confirmation') %}
         <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{display}};">
             <strong class="col-xs-6 col-sm-5"></strong>
             <span class="col-xs-6 col-sm-7">
-                {% if paymentMopKey in ['novalnet_sepa', 'novalnet_guaranteed_invoice', 'novalnet_guaranteed_sepa', 'novalnet_cc'] %}
+                {% if paymentMopKey in ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA', 'NOVALNET_CC'] %}
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% else %}
                     <a class="payment-confirmation-btn btn btn-primary" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
@@ -43,11 +43,11 @@
 <div class="modal" tabindex="-1" role="dialog" id="novalnetPaymentForm">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      {% if paymentMopKey in ['novalnet_sepa', 'novalnet_guaranteed_sepa'] %}
+      {% if paymentMopKey in ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_SEPA'] %}
         {% include "Novalnet::PaymentForm.NovalnetSepa" %}
-      {% elseif paymentMopKey == 'novalnet_guaranteed_invoice' %}
+      {% elseif paymentMopKey == 'NOVALNET_GUARANTEED_INVOICE' %}
         {% include "Novalnet::PaymentForm.NovalnetGuaranteedInvoice" %}
-      {% elseif paymentMopKey == 'novalnet_cc' %}
+      {% elseif paymentMopKey == 'NOVALNET_CC' %}
         {% include "Novalnet::PaymentForm.NovalnetCc" %}
       {% endif %}
     </div>
