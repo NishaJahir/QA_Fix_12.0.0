@@ -91,7 +91,7 @@ function loadNovalnetCcIframe()
                 country_code: (ccFormDetails.country_code !== undefined) ? ccFormDetails.country_code : ''
             },
             shipping: {
-                same_as_billing: (ccFormDetails.same_as_billing !== undefined) ? ccFormDetails.same_as_billing : 0
+                same_as_billing: (ccFormDetails.same_as_billing !== undefined) ? ccFormDetails.same_as_billing : 0,
                 street: (ccFormDetails.shipping.street !== undefined) ? ccFormDetails.shipping.street : '',
                 city: (ccFormDetails.shipping.city !== undefined) ? ccFormDetails.shipping.city : '',
                 zip: (ccFormDetails.shipping.zip !== undefined) ? ccFormDetails.shipping.zip : '',
