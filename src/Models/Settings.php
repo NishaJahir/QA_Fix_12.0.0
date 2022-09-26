@@ -69,6 +69,7 @@ class Settings extends Model
             'novalnet_private_key' => $data['novalnet_access_key'],
             'novalnet_tariff_id' => $data['novalnet_tariff_id'],
             'novalnet_client_key' => $data['novalnet_client_key'],
+            'novalnet_order_creation' => $data['novalnet_order_creation'],
             'novalnet_webhook_testmode' => $data['novalnet_webhook_testmode'],
             'novalnet_webhook_email_to' => $data['novalnet_webhook_email_to'],
             'novalnet_cc' => $data['novalnet_cc'],
@@ -99,6 +100,9 @@ class Settings extends Model
         }
         if(isset($data['novalnet_client_key'])) {
             $this->value['novalnet_client_key'] = $data['novalnet_client_key'];
+        }
+        if(isset($data['novalnet_order_creation'])) {
+            $this->value['novalnet_order_creation'] = $data['novalnet_order_creation'];
         }
         if(isset($data['novalnet_webhook_testmode'])) {
             $this->value['novalnet_webhook_testmode'] = $data['novalnet_webhook_testmode'];
@@ -188,7 +192,8 @@ class Settings extends Model
     {
         $database = pluginApp(DataBase::class);
         $this->updatedAt = (string)Carbon::now();
-
+        // Log the configuration updated time for the reference
+        $this->getLogger(__METHOD__)->error('Updated novalnet settings details ' . $this->updatedAt, $this);
         return $database->save($this);
     }
 }
