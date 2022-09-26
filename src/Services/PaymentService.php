@@ -1164,4 +1164,42 @@ class PaymentService
     public function logger($k, $v){
         $this->getLogger(__METHOD__)->error($k, $v);
     }
+    
+    public function displayTransactionComments($orderId, $paymentDetails)
+    {
+		$transactionComments = '';
+        foreach($paymentDetails as $paymentDetail) {
+			// Check it is Novalnet Payment method order
+			if($this->paymentHelper->getPaymentKeyByMop($paymentDetail->mopId)) {
+				
+				// Load the order property and get the required details
+				$orderProperties = $paymentDetail->properties;
+				foreach($orderProperties as $orderProperty) {
+					if($orderProperty->typeId == 21) { // Loads the bank details from the payment object for previous payment plugin versions
+						$invoiceDetails = $orderProperty->value;
+					}
+					if($orderProperty->typeId == 30) { // Load the transaction status
+						$txStatus = $orderProperty->value;
+					}
+					if($orderProperty->typeId == 22) { // Loads the cashpayment comments from the payment object for previous payment plugin versions
+						$cashpaymentComments = $orderProperty->value;
+					}
+				}
+                    
+				// Get Novalnet transaction details from the Novalnet database table
+				$nnDbTxDetails = $this->getDatabaseValues($orderId);
+				
+				// Get the transaction status as string for the previous payment plugin version
+				$nnDbTxDetails['tx_status'] = $this->getTxStatusAsString($txStatus, $nnDbTxDetails['payment_id']);
+				
+				// Set the cashpayment comments into array
+				$nnDbTxDetails['cashpayment_comments'] = $cashpaymentComments ?? '';
+				
+				// Form the Novalnet transaction comments
+				$transactionComments .= $this->formTransactionComments($nnDbTxDetails);
+                }
+            }
+             return $transactionComments;
+    }
+        
 }
