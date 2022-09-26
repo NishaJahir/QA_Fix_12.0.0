@@ -27,6 +27,12 @@
             });
         });
         
+       {# Call the form payment methods #}
+       jQuery('#nn_form_payment_process').click(function() {
+          jQuery("[id^='nnReinitPaymentMethod-']").hide();
+          jQuery('#novalnetPaymentForm').show();
+      });
+        
     });
   
 function iOS() {
