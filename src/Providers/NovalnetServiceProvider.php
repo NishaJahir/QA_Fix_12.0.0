@@ -178,9 +178,12 @@ class NovalnetServiceProvider extends ServiceProvider
                     }
                 }
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
-		 
-		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') == true) {
-		   $paymentResponseData = $paymentService->performServerCall();
+		// If payment before order creation option was set as 'No' the payment will be created initially
+		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
+	           $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
+		   $privateKey = $settingsService->getNnPaymentSettingsValue('novalnet_private_key');
+        	   $paymentResponseData = $paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
+		   $sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
 		}
 		
                 $event->setValue($content);
@@ -200,34 +203,40 @@ class NovalnetServiceProvider extends ServiceProvider
     protected function registerPaymentExecute(Dispatcher $eventDispatcher,
                                               PaymentHelper $paymentHelper,
                                               PaymentService $paymentService,
-                                              FrontendSessionStorageFactoryContract $sessionStorage
+                                              FrontendSessionStorageFactoryContract $sessionStorage,
+					      SettingsService $settingsService
                                              )
     {
         // Listen for the event that executes the payment
         $eventDispatcher->listen(
             ExecutePayment::class,
-            function (ExecutePayment $event) use ($paymentHelper, $paymentService, $sessionStorage)
+            function (ExecutePayment $event) use ($paymentHelper, $paymentService, $sessionStorage, $settingsService)
             {
                 if($paymentHelper->getPaymentKeyByMop($event->getMop())) {
                     $sessionStorage->getPlugin()->setValue('nnOrderNo',$event->getOrderId());
                     $sessionStorage->getPlugin()->setValue('mop',$event->getMop());
                     $paymentKey = $paymentHelper->getPaymentKeyByMop($event->getMop());
                     $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
-                    $paymentResponseData = $paymentService->performServerCall();
-                    $nnDoRedirect = $sessionStorage->getPlugin()->getValue('nnDoRedirect');
-                    if($paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect)) {
-                        if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
-                            // Transaction secret used for the later checksum verification
-                            $sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                            $sessionStorage->getPlugin()->setValue('nnDoRedirect', null);
-                            $event->setType('redirectUrl');
-                            $event->setValue($paymentResponseData['result']['redirect_url']);
-                        } else {
-                           // Handle an error case and set the return type and value for the event.
-                              $event->setType('error');
-                              $event->setValue('The payment could not be executed!');
-                        }
-                    }
+		    if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') == true) {
+			    $paymentResponseData = $paymentService->performServerCall();
+			    $nnDoRedirect = $sessionStorage->getPlugin()->getValue('nnDoRedirect');
+			    if($paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect)) {
+				if(!empty($paymentResponseData) && !empty($paymentResponseData['result']['redirect_url']) && !empty($paymentResponseData['transaction']['txn_secret'])) {
+				    // Transaction secret used for the later checksum verification
+				    $sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
+				    $sessionStorage->getPlugin()->setValue('nnDoRedirect', null);
+				    $event->setType('redirectUrl');
+				    $event->setValue($paymentResponseData['result']['redirect_url']);
+				} else {
+				   // Handle an error case and set the return type and value for the event.
+				      $event->setType('error');
+				      $event->setValue('The payment could not be executed!');
+				}
+			    }
+		    } else {
+			 // Handle the further process to the order based on the payment response
+            		 $paymentService->HandlePaymentResponse();   
+		   }
                 }
             });
     }
