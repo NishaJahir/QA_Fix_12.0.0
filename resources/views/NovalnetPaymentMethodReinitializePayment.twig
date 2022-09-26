@@ -30,8 +30,29 @@
         <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{display}};">
             <strong class="col-xs-6 col-sm-5"></strong>
             <span class="col-xs-6 col-sm-7">
-                <a class="payment-confirmation-btn btn" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
+                {% if paymentKey in ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_INVOICE', 'NOVALNET_GUARANTEED_SEPA', 'NOVALNET_CC'] %}
+                    <a class="payment-confirmation-btn btn" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
+                {% else %}
+                    <a class="payment-confirmation-btn btn" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
+                {% endif %}
             </span>
         </div>
     {% endif %}
+
+{# Show the Modal popup for the form payments #}
+<div class="modal" tabindex="-1" role="dialog" id="novalnetPaymentForm">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      {% if paymentKey == 'NOVALNET_SEPA' %}
+        {% include "Novalnet::PaymentForm.novalnetSepa" %}
+      {% elseif paymentKey == 'NOVALNET_GUARANTEED_INVOICE' %}
+        {% include "Novalnet::PaymentForm.novalnetGuaranteedInvoice" %}
+      {% elseif paymentKey == 'NOVALNET_GUARANTEED_SEPA' %}
+        {% include "Novalnet::PaymentForm.novalnetGuaranteedSepa" %}
+      {% elseif paymentKey == 'NOVALNET_CC' %}
+        {% include "Novalnet::PaymentForm.novalnetCc" %}
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endif %}
