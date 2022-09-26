@@ -48,7 +48,7 @@
         </div>
         
         {# Date of Birth Form #}
-        {% if paymentMopKey == 'NOVALNET_GUARANTEED_INVOICE' and showBirthday == true %}
+        {% if paymentMopKey == 'NOVALNET_GUARANTEED_SEPA' and showBirthday == true %}
             {# Set the post data #}
             <input type="hidden" id="nn_show_dob" name="nn_show_dob" value="1">
             <input type="hidden" id="nn_dob_empty" name="nn_dob_empty" value="{{trans("Novalnet::Customize.template_dob_empty")}}">
