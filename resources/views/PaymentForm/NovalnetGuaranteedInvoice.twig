@@ -19,7 +19,10 @@
         <input type="hidden" id="nn_show_dob" name="nn_show_dob" value="1">
         <input type="hidden" id="nn_dob_empty" name="nn_dob_empty" value="{{trans("Novalnet::Customize.template_dob_empty")}}">
         <input type="hidden" id="nn_dob_invalid" name="nn_dob_invalid" value="{{trans("Novalnet::Customize.template_dob_invalid")}}">
-        
+        {# Set the reinitialization is used #}
+        {% if reinitializePayment is not empty %}
+            <input type="hidden" id="nn_reinitializePayment" name="nn_reinitializePayment" value="{{reinitializePayment}}">
+        {% endif %}
         <div class="row">
             <div class="col-12">
                 <div class="modal-title" style="color:#008EBF;"><b>{{trans("Novalnet::PaymentMethod.note")}}</b>{{trans("Novalnet::PaymentMethod.dobshowingreason")}}</div><br>
