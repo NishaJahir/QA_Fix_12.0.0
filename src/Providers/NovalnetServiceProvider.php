@@ -38,6 +38,7 @@ use Plenty\Modules\Order\Pdf\Events\OrderPdfGenerationEvent;
 use Plenty\Modules\Order\Pdf\Models\OrderPdfGeneration;
 use Plenty\Modules\Document\Models\Document;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
+use Novalnet\Services\SettingsService;
 use Plenty\Plugin\Log\Loggable;
 
 /**
@@ -69,6 +70,7 @@ class NovalnetServiceProvider extends ServiceProvider
      * @param Twig $twig
      * @param EventProceduresService $eventProceduresService
      * @param PaymentRepositoryContract $paymentRepository
+     * @param SettingsService $settingsService
      */
     public function boot(Dispatcher $eventDispatcher,
                         BasketRepositoryContract $basketRepository,
@@ -78,12 +80,13 @@ class NovalnetServiceProvider extends ServiceProvider
                         FrontendSessionStorageFactoryContract $sessionStorage,
                         Twig $twig,
                         EventProceduresService $eventProceduresService,
-                        PaymentRepositoryContract $paymentRepository
+                        PaymentRepositoryContract $paymentRepository,
+			SettingsService $settingsService
                         )
     {
         $this->registerPaymentMethods($payContainer);
         
-        $this->registerPaymentRendering($eventDispatcher, $basketRepository, $paymentHelper, $paymentService, $sessionStorage, $twig);
+        $this->registerPaymentRendering($eventDispatcher, $basketRepository, $paymentHelper, $paymentService, $sessionStorage, $twig, $settingsService);
 
         $this->registerPaymentExecute($eventDispatcher, $paymentHelper, $paymentService, $sessionStorage);
         
@@ -126,7 +129,7 @@ class NovalnetServiceProvider extends ServiceProvider
                                               PaymentHelper $paymentHelper,
                                               PaymentService $paymentService,
                                               FrontendSessionStorageFactoryContract $sessionStorage,
-                          Twig $twig
+                          		      Twig $twig
                                               )
     {
         // Listen for the event that gets the payment method content
@@ -174,7 +177,10 @@ class NovalnetServiceProvider extends ServiceProvider
                     }
                 }
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
-		
+		 
+		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') == true) {
+		   $paymentResponseData = $paymentService->performServerCall();
+		}
 		
                 $event->setValue($content);
                 $event->setType($contentType);
