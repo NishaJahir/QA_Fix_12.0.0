@@ -56,7 +56,7 @@ class Settings extends Model
      * 
      * @param array $data
      * 
-     * @return array
+     * @return Model
      */
     public function create($data)
     {
@@ -85,7 +85,7 @@ class Settings extends Model
      * 
      * @param array $data
      * 
-     * @return array
+     * @return Model
      */
     public function update($data)
     {
@@ -186,14 +186,27 @@ class Settings extends Model
     /**
      * Save the configuration values into settings table
      * 
-     * @return array
+     * @return Model
      */
     public function save()
     {
+        /** @var DataBase $database */
         $database = pluginApp(DataBase::class);
         $this->updatedAt = (string)Carbon::now();
         // Log the configuration updated time for the reference
         $this->getLogger(__METHOD__)->error('Updated novalnet settings details ' . $this->updatedAt, $this);
+        return $database->save($this);
+    }
+    
+    /**
+     * Delete the configuration values into settings table
+     * 
+     * @return bool
+     */
+    public function delete()
+    {
+        /** @var DataBase $database */
+        $database = pluginApp(DataBase::class);
         return $database->save($this);
     }
 }
