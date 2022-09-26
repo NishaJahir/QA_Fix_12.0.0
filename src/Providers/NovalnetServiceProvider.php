@@ -34,6 +34,8 @@ use Novalnet\Constants\NovalnetConstants;
 use Plenty\Plugin\Templates\Twig;
 use Plenty\Modules\EventProcedures\Services\Entries\ProcedureEntry;
 use Plenty\Modules\EventProcedures\Services\EventProceduresService;
+use Plenty\Modules\Order\Pdf\Events\OrderPdfGenerationEvent;
+use Plenty\Modules\Order\Pdf\Models\OrderPdfGeneration;
 use Plenty\Plugin\Log\Loggable;
 
 /**
