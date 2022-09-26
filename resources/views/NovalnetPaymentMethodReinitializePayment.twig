@@ -31,9 +31,9 @@
             <strong class="col-xs-6 col-sm-5"></strong>
             <span class="col-xs-6 col-sm-7">
                 {% if paymentKey in ['novalnet_sepa', 'novalnet_guaranteed_invoice', 'novalnet_guaranteed_sepa', 'novalnet_cc'] %}
-                    <a class="payment-confirmation-btn btn" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
+                    <a class="payment-confirmation-btn btn btn-primary" id="nn_form_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% else %}
-                    <a class="payment-confirmation-btn btn" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
+                    <a class="payment-confirmation-btn btn btn-primary" id="nn_direct_payment_process">{{trans("Novalnet::Customize.template_novalnet_reinit_payment")}}</a>
                 {% endif %}
             </span>
         </div>
@@ -43,13 +43,13 @@
 <div class="modal" tabindex="-1" role="dialog" id="novalnetPaymentForm">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      {% if paymentKey == 'NOVALNET_SEPA' %}
+      {% if paymentKey == 'novalnet_sepa' %}
         {% include "Novalnet::PaymentForm.novalnetSepa" %}
-      {% elseif paymentKey == 'NOVALNET_GUARANTEED_INVOICE' %}
+      {% elseif paymentKey == 'novalnet_guaranteed_invoice' %}
         {% include "Novalnet::PaymentForm.novalnetGuaranteedInvoice" %}
-      {% elseif paymentKey == 'NOVALNET_GUARANTEED_SEPA' %}
+      {% elseif paymentKey == 'novalnet_guaranteed_sepa' %}
         {% include "Novalnet::PaymentForm.novalnetGuaranteedSepa" %}
-      {% elseif paymentKey == 'NOVALNET_CC' %}
+      {% elseif paymentKey == 'novalnet_cc' %}
         {% include "Novalnet::PaymentForm.novalnetCc" %}
       {% endif %}
     </div>
