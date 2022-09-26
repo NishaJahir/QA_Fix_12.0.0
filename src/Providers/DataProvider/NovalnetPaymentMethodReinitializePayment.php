@@ -75,6 +75,9 @@ class NovalnetPaymentMethodReinitializePayment
                  $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $transactionDetails['paymentName']);
                  $ccCustomFields = $paymentService->getCcFormFields();
             }
+            
+             // Check if the birthday field needs to show for guaranteed payments
+             $showBirthday = ((!isset($paymentRequestData['paymentRequestData']['customer']['billing']['company']) && !isset($paymentRequestData['paymentRequestData']['customer']['birth_date'])) ||  (isset($paymentRequestData['paymentRequestData']['customer']['birth_date']) && time() < strtotime('+18 years', strtotime($paymentRequestData['paymentRequestData']['customer']['birth_date'])))) ? true : false;
         }
 
         // If the Novalnet payments are rejected do the reinitialize payment
@@ -88,6 +91,7 @@ class NovalnetPaymentMethodReinitializePayment
                                 'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . $transactionDetails['paymentName']),
                                 'ccFormDetails' => !empty($ccFormDetails) ? $ccFormDetails : '',
                                 'ccCustomFields' => !empty($ccCustomFields) ? $ccCustomFields : '',
+                                'showBirthday' => $showBirthday
                                 ]);
         } else {
             return '';
