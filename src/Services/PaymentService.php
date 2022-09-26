@@ -1194,11 +1194,12 @@ class PaymentService
 				
 				// Set the cashpayment comments into array
 				$nnDbTxDetails['cashpayment_comments'] = $cashpaymentComments ?? '';
-				
+				$this->getLogger(__METHOD__)->error('com db', $nnDbTxDetails);
 				// Form the Novalnet transaction comments
 				$transactionComments .= $this->formTransactionComments($nnDbTxDetails);
                 }
             }
+	    $this->getLogger(__METHOD__)->error('com', $transactionComments);
              return $transactionComments;
     }
         
