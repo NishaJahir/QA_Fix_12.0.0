@@ -68,7 +68,8 @@ class NovalnetGooglePayButtonDataProvider
             'enforce' => $settingsService->getNnPaymentSettingsValue('enforce', 'novalnet_google_pay'),
             'buttonType' => $settingsService->getNnPaymentSettingsValue('button_type', 'novalnet_google_pay'),
             'buttonTheme' => $settingsService->getNnPaymentSettingsValue('button_theme', 'novalnet_google_pay'),
-            'buttonHeight' => $settingsService->getNnPaymentSettingsValue('button_height', 'novalnet_google_pay')
+            'buttonHeight' => $settingsService->getNnPaymentSettingsValue('button_height', 'novalnet_google_pay'),
+            'testMode' => ($settingsService->getNnPaymentSettingsValue('test_mode', 'novalnet_google_pay') == true) ? 'SANDBOX' : 'PRODUCTION'
            ];
         
         
