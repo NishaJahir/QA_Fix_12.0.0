@@ -25,6 +25,7 @@
         {# Set the reinitialization is used #}
         {% if reinitializePayment is not empty %}
             <input type="hidden" id="nn_reinitializePayment" name="nn_reinitializePayment" value="{{reinitializePayment}}">
+            <input type="hidden" id="nn_order_amount" name="nn_order_amount" value="{{orderAmount}}">
         {% endif %}
         {# Load the Iframe #}
         <div class="loader"></div>
