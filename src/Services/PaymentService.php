@@ -802,7 +802,7 @@ class PaymentService
      * 
      * @return string
      */
-    public function getCreditCardAuthenticationCallData(Basket $basket, $paymentKey) 
+    public function getCreditCardAuthenticationCallData(Basket $basket, $paymentKey, $orderAmount = 0) 
     {
         
         // Get the customer billing and shipping details
@@ -841,7 +841,7 @@ class PaymentService
             'city'       => $billingAddress->town,
             'zip'        => $billingAddress->postalCode,
             'country_code' => $this->countryRepository->findIsoCode($billingAddress->countryId, 'iso_code_2'),
-            'amount'     => $this->paymentHelper->ConvertAmountToSmallerUnit($basket->basketAmount),
+            'amount'     => !empty($orderAmount) ? $orderAmount : $this->paymentHelper->ConvertAmountToSmallerUnit($basket->basketAmount),
             'currency'   => $basket->currency,
             'lang'       => strtoupper($this->sessionStorage->getLocaleSettings()->language)
         ];
