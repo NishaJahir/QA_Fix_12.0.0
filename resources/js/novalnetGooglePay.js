@@ -9,27 +9,31 @@ jQuery(document).ready(function() {
             clientKey: String(jQuery('#nn_client_key').val()),
             paymentIntent: {
                 merchant: {
-                    countryCode : String(jQuery('#nn_google_pay').attr('data-country'))
+                    paymentDataPresent: false,
+                    countryCode : String(jQuery('#nn_google_pay').attr('data-country')),
+                    partnerId: jQuery('#nn_merchant_id').val(),
                 },
                 transaction: {
                     amount: String(jQuery('#nn_google_pay').attr('data-total-amount')),
-                    currency: String(jQuery('#nn_google_pay').attr('data-currency')),   
+                    currency: String(jQuery('#nn_google_pay').attr('data-currency')), 
+                    enforce3d: jQuery('#nn_enforce').val(),
                     paymentMethod: "GOOGLEPAY",
                     environment: "SANDBOX"
                 },
                 custom: {
                     lang: String(jQuery('#nn_google_pay').attr('data-order-lang'))
                 },
-                wallet: {
-                    merchantName: "Testing purpose"
+                order: {
+                    paymentDataPresent: false,
+                    merchantName: String(jQuery('#nn_business_name').val()),
                 },
                 button: {
-                    type: "buy",
-                    style: "black",
+                    type: jQuery('#nn_button_type').val(),
+                    style: jQuery('#nn_button_theme').val(),
                     locale: "en-US",
-                    boxSizing: "fill",
+                    boxSizing: "border-box",
                     dimensions: {
-                        height: 45,
+                        height: jQuery('#nn_button_height').val(),
                         width: 200
                     }
                 },
