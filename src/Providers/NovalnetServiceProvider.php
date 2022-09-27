@@ -180,12 +180,14 @@ class NovalnetServiceProvider extends ServiceProvider
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
 		// If payment before order creation option was set as 'No' the payment will be created initially
 		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true && (in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || $paymentService->isRedirectPayment($paymentKey)  || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false))) {
-	           $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
 		   $privateKey = $settingsService->getNnPaymentSettingsValue('novalnet_private_key');
         	   $paymentResponseData = $paymentService->performServerCall();
 		   if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
 			  $content = $paymentResponseData['result']['status_text'];
 			  $contentType = 'errorCode';
+		   }
+		   if($paymentService->isRedirectPayment($paymentKey)) {
+			$sessionStorage->getPlugin()->setValue('nnPaymentResponseData', $paymentResponseData);   
 		   }
 		}
 		
@@ -237,8 +239,16 @@ class NovalnetServiceProvider extends ServiceProvider
 				}
 			    }
 		    } else {
-			 // Handle the further process to the order based on the payment response
-            		 $paymentService->HandlePaymentResponse();   
+			  if(!$paymentService->isRedirectPayment($paymentKey)) {
+				// Handle the further process to the order based on the payment response
+				 $paymentService->HandlePaymentResponse();   
+			    } else {
+				$paymentResponseData = $sessionStorage->getPlugin()->getValue('nnPaymentResponseData');
+				// Transaction secret used for the later checksum verification
+				$sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
+				$event->setType('redirectUrl');
+				$event->setValue($paymentResponseData['result']['redirect_url']);
+			    }
 		   }
                 }
             });
