@@ -220,7 +220,7 @@ class PaymentController extends Controller
                 // Transaction secret used for the later checksum verification
                 $this->getLogger(__METHOD__)->error('if res', $paymentResponseData);
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                $this->response->redirectToIntended($paymentResponseData['result']['redirect_url']);
+                return $this->response->redirectToIntended($paymentResponseData['result']['redirect_url']);
             } else {
                 // Redirect to confirmation page
                 $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);  
