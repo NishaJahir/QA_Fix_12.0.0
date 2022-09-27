@@ -300,6 +300,8 @@ class NovalnetAssistant extends WizardProvider
         $config = $this->createOnHoldConfigurationRedirection($config);
         // Load the Novalnet Guaranteed payments configuration
         $config = $this->createGuaranteedPaymentConfiguration($config);
+        // Load the Novalnet Google Pay payments configuration
+        $config = $this->createGooglePayPaymentConfiguration($config);
         
         return $config;
     }
@@ -597,5 +599,80 @@ class NovalnetAssistant extends WizardProvider
         }
         
         return $config;
+    }
+ 
+    public function createGooglePayPaymentConfiguration($config)
+    {
+        $config['steps']['novalnetGooglepay']['sections'][]['form'] = [
+         'novalnetGooglepayMerchantId' => [
+              'type' => 'text',
+              'options' => [
+               'name' => 'NovalnetAssistant.novalnetGooglepayMerchantIdLabel',
+               'tooltip' => 'NovalnetAssistant.novalnetGooglepayMerchantIdTooltip',
+              ]
+         ],
+         'novalnetGooglepayBusinessName' => [
+              'type' => 'text',
+              'options' => [
+               'name' => 'NovalnetAssistant.novalnetGooglepayBusinessNameLabel',
+               'tooltip' => 'NovalnetAssistant.novalnetGooglepayMerchantIdTooltip',
+              ]
+         ],
+         'novalnetGooglepayEnforce' => [
+              'type' => 'checkbox',
+              'options' => [
+               'name' => 'NovalnetAssistant.novalnetGooglepayEnforceLabel',
+              ]
+         ],
+         'novalnetGooglepayButtonType' => [
+              'type' => 'select',
+            'defaultValue' => 'buy',
+              'options' => [
+               'name' => 'NovalnetAssistant.novalnetGooglepayButtonTypeLabel',
+               'listBoxValues' => $this->listGooglePayButtonTypes()
+              ]
+         ],
+         'novalnetGooglepayButtonTheme' => [
+              'type' => 'select',
+            'defaultValue' => 'default',
+              'options' => [
+               'name' => 'NovalnetAssistant.novalnetGooglepayButtonThemeLabel',
+               'listBoxValues' => [
+                [
+                'caption' => 'NovalnetAssistant.novalnetGooglepayButtonDefaultThemeLabel',
+                'value' => 'default'
+                ],
+                [
+                'caption' => 'NovalnetAssistant.novalnetGooglepayButtonWhiteThemeLabel',
+                'value' => 'white'
+                ],
+                [
+                'caption' => 'NovalnetAssistant.novalnetGooglepayButtonBlackThemeLabel',
+                'value' => 'black'
+                ]
+             ]
+              ]
+         ],
+         'novalnetGooglepayButtonHeight' => [
+              'type' => 'text',
+              'options' => [
+               'name' => 'NovalnetAssistant.novalnetGooglepayButtonHeightLabel',
+               'tooltip' => 'NovalnetAssistant.novalnetGooglepayButtonHeightTooltip',
+              ]
+         ]
+        ];
+        return $config;
+    }
+    
+    public function listGooglePayButtonTypes() {
+     $ButtonTypes = ['Buy' => 'buy', 'Book' => 'book', 'Checkout' => 'checkout', 'Donate' => 'donate', 'Order' => 'order', 'Pay' => 'pay', 'Plain' => 'plain', 'Subscribe' => 'subscribe'];
+     $googlePayButtonTypes = [];
+           foreach($googlePayButtonTypes as $googlePayButtonTypeIndex => $googlePayButtonType) {
+                   $googlePayButtonTypes[] = [
+                   'caption' => 'NovalnetAssistant.novalnetGooglepay'. $googlePayButtonTypeIndex .'Label',
+                   'value' => $googlePayButtonType
+                   ];
+           }
+           return $googlePayButtonTypes;
     }
 }
