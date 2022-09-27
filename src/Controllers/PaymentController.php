@@ -191,7 +191,7 @@ class PaymentController extends Controller
             return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
         } else {
             if($this->settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
-                $paymentResponseDta = $this->paymentService->performServerCall();
+                $paymentResponseData = $this->paymentService->performServerCall();
                 if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
                   // return back to the customer on checkout page
                   return $this->response->redirectTo('checkout');
