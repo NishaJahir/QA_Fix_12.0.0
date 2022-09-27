@@ -569,6 +569,7 @@ class PaymentService
      */
     public function HandlePaymentResponse()
     {
+	    $this->getLogger(__METHOD__)->error('enter', 'enter');
         $nnPaymentData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', null);
         
@@ -578,7 +579,7 @@ class PaymentService
         // If Order No is not received from the payment response assign the from the session
         if(empty($nnPaymentData['transaction']['order_no'])) {
             $nnPaymentData['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
-             $this->sessionStorage->getPlugin()->setValue('nnOrderNo', null);
+            $this->sessionStorage->getPlugin()->setValue('nnOrderNo', null);
         }
         
         // Set the cashpayment token to session      
