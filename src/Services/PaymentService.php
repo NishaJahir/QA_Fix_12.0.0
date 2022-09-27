@@ -460,7 +460,7 @@ class PaymentService
 	if($this->settingsService->getNnPaymentSettingsValue('novalnet_order_creation') == true) {
            $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
         }
-        $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
+        $paymentKey = $this->paymentHelper->getNnPaymentKey($paymentRequestData['paymentRequestData']['transaction']['payment_type']); 
         $privateKey = $this->settingsService->getNnPaymentSettingsValue('novalnet_private_key');
         $paymentResponseData = $this->paymentHelper->executeCurl($paymentRequestData['paymentRequestData'], $paymentRequestData['paymentUrl'], $privateKey);
         $isPaymentSuccess = isset($paymentResponseData['result']['status']) && $paymentResponseData['result']['status'] == 'SUCCESS';
