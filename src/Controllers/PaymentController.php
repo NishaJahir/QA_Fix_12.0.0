@@ -190,6 +190,13 @@ class PaymentController extends Controller
             $this->paymentService->performServerCall();
             return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/confirmation');
         } else {
+            if($this->settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
+                $paymentResponseDta = $this->paymentService->performServerCall();
+                if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
+                  // return back to the customer on checkout page
+                  return $this->response->redirectTo('checkout');
+		        }
+            }
             // Call the shop executePayment function
             return $this->response->redirectTo($this->sessionStorage->getLocaleSettings()->language . '/place-order');
         }
