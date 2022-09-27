@@ -482,10 +482,10 @@ class PaymentService
             if($isPaymentSuccess) {
                 $this->pushNotification($paymentResponseData['result']['status_text'], 'success', 100);
             } else {
-                $this->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
 		if($this->settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
             	   return $paymentResponseData;
 	   	}
+		$this->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);
             }
             // Set the payment response in the session for the further processings
             $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData['paymentRequestData'], $paymentResponseData));
