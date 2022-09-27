@@ -126,7 +126,7 @@ class PaymentController extends Controller
             $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
             
             // Set the payment response in the session for the further processings
-            $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($paymentRequestData, $paymentResponseData));
+            $this->sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge_recursive($paymentRequestData, $paymentResponseData));
             // Handle the further process to the order based on the payment response
             $this->paymentService->HandlePaymentResponse();
             
@@ -220,7 +220,7 @@ class PaymentController extends Controller
                 // Transaction secret used for the later checksum verification
                 $this->getLogger(__METHOD__)->error('if res', $paymentResponseData);
                 $this->sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
-                return $this->response->redirectToIntended($paymentResponseData['result']['redirect_url'], 302, ['Access-Control-Allow-Headers' => '*']);
+               $this->response->redirectToIntended($paymentResponseData['result']['redirect_url'], 302, ['Access-Control-Allow-Headers' => '*']);
             } else {
                 // Redirect to confirmation page
                 $this->paymentService->pushNotification($paymentResponseData['result']['status_text'], 'error', 100);  
