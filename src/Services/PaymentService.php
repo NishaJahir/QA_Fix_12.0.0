@@ -461,10 +461,9 @@ class PaymentService
     public function performServerCall()
     {
         $paymentRequestData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
-	$orderNo = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
 	// Send the order no to Novalnet server if order is created initially
-	if(!empty($orderNo)) {
-           $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $orderNo;
+	if($this->settingsService->getNnPaymentSettingsValue('novalnet_order_creation') == true) {
+           $paymentRequestData['paymentRequestData']['transaction']['order_no'] = $this->sessionStorage->getPlugin()->getValue('nnOrderNo');
         }
         $paymentKey = $this->sessionStorage->getPlugin()->getValue('paymentkey');
         $privateKey = $this->settingsService->getNnPaymentSettingsValue('novalnet_private_key');
