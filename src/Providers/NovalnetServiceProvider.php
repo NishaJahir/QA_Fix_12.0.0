@@ -178,9 +178,10 @@ class NovalnetServiceProvider extends ServiceProvider
                     }
                 }
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
+		    $this->getLogger(__METHOD__)->error('response', $paymentKey);
 		// If payment before order creation option was set as 'No' the payment will be created initially
 		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true && (in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || $paymentService->isRedirectPayment($paymentKey)  || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false))) {
-		   $this->getLogger(__METHOD__)->error('response', $paymentKey);
+		   
 		   $privateKey = $settingsService->getNnPaymentSettingsValue('novalnet_private_key');
         	   $paymentResponseData = $paymentService->performServerCall();
 		   if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
@@ -224,6 +225,7 @@ class NovalnetServiceProvider extends ServiceProvider
                     $paymentKey = $paymentHelper->getPaymentKeyByMop($event->getMop());
                     $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
 		    if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') == true) {
+			    $this->getLogger(__METHOD__)->error('here', $paymentKey);
 			    $paymentResponseData = $paymentService->performServerCall();
 			    $nnDoRedirect = $sessionStorage->getPlugin()->getValue('nnDoRedirect');
 			    if($paymentService->isRedirectPayment($paymentKey) || !empty($nnDoRedirect)) {
@@ -240,10 +242,12 @@ class NovalnetServiceProvider extends ServiceProvider
 				}
 			    }
 		    } else {
+			    $this->getLogger(__METHOD__)->error('here2', $paymentKey);
 			  if(!$paymentService->isRedirectPayment($paymentKey)) {
 				// Handle the further process to the order based on the payment response
 				 $paymentService->HandlePaymentResponse();   
 			    } else {
+				  $this->getLogger(__METHOD__)->error('here3', $paymentKey);
 				$paymentResponseData = $sessionStorage->getPlugin()->getValue('nnPaymentResponseData');
 				// Transaction secret used for the later checksum verification
 				$sessionStorage->getPlugin()->setValue('nnTxnSecret', $paymentResponseData['transaction']['txn_secret']);
