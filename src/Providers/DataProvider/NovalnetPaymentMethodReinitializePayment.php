@@ -61,18 +61,17 @@ class NovalnetPaymentMethodReinitializePayment
             }
             
             // Set the required values into session
-            $sessionStorage->getPlugin()->setValue('orderAmount', $invoiceAmount);
             $sessionStorage->getPlugin()->setValue('nnOrderNo', $order['id']);
             $sessionStorage->getPlugin()->setValue('paymentkey', strtoupper($transactionDetails['paymentName']));
             
-            $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']));
+            $paymentRequestData = $paymentService->generatePaymentParams($basketRepository->load(), strtoupper($transactionDetails['paymentName']), $invoiceAmount);
             
             // Set the payment request parameters into session
             $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
             
             // Get the Credit card form loading parameters
             if ($transactionDetails['paymentName'] == 'novalnet_cc') {
-                 $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $transactionDetails['paymentName']);
+                 $ccFormDetails = $paymentService->getCreditCardAuthenticationCallData($basketRepository->load(), $transactionDetails['paymentName'], $invoiceAmount);
                  $ccCustomFields = $paymentService->getCcFormFields();
             }
             
@@ -91,7 +90,8 @@ class NovalnetPaymentMethodReinitializePayment
                                 'paymentName' => $paymentHelper->getCustomizedTranslatedText('template_' . $transactionDetails['paymentName']),
                                 'ccFormDetails' => !empty($ccFormDetails) ? $ccFormDetails : '',
                                 'ccCustomFields' => !empty($ccCustomFields) ? $ccCustomFields : '',
-                                'showBirthday' => $showBirthday
+                                'showBirthday' => $showBirthday,
+                                'orderAmount' => $invoiceAmount
                                 ]);
         } else {
             return '';
