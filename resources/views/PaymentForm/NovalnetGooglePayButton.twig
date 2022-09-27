@@ -10,7 +10,14 @@
   <input type="hidden" name="nn_google_pay_token" id="nn_google_pay_token">
 
   {# Set the client key#}
-  <input type="hidden" name="nn_client_key" id="nn_client_key" value="{{clientKey}}">
+  <input type="hidden" name="nn_client_key" id="nn_client_key" value="{{googlePayData.clientKey}}">
+  <input type="hidden" name="nn_merchant_id" id="nn_merchant_id" value="{{googlePayData.merchantId}}">
+  <input type="hidden" name="nn_business_name" id="nn_business_name" value="{{googlePayData.sellerName}}">
+  <input type="hidden" name="nn_enforce" id="nn_enforce" value="{{googlePayData.enforce}}">
+  <input type="hidden" name="nn_button_type" id="nn_button_type" value="{{googlePayData.buttonType}}">
+  <input type="hidden" name="nn_button_theme" id="nn_button_theme" value="{{googlePayData.buttonTheme}}">
+  <input type="hidden" name="nn_button_height" id="nn_button_height" value="{{googlePayData.buttonHeight}}">
+  
   {# Set the reinitialization is used #}
         {% if reinitializePayment is not empty %}
             <input type="hidden" id="nn_reinitializePayment" name="nn_reinitializePayment" value="{{reinitializePayment}}">
