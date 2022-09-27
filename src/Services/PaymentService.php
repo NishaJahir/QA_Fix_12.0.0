@@ -200,7 +200,7 @@ class PaymentService
      * 
      * @return array
      */
-    public function generatePaymentParams(Basket $basket, $paymentKey = '')
+    public function generatePaymentParams(Basket $basket, $paymentKey = '', $orderAmount = 0)
     {
         // Get the customer billing and shipping details
         $billingAddressId = $basket->customerInvoiceAddressId;
@@ -231,11 +231,6 @@ class PaymentService
             $basket->shippingAmount = $basket->shippingAmountNet;
             $basket->basketAmount = $basket->basketAmountNet;
         }
-        
-        // Get order amount from session while the reiniate payment process
-        $orderAmount = $this->sessionStorage->getPlugin()->getValue('orderAmount');
-        
-        $this->getLogger(__METHOD__)->error('basket', $basket);
         
         // Build the Payment Request Parameters
         $paymentRequestData = [];
