@@ -179,7 +179,7 @@ class NovalnetServiceProvider extends ServiceProvider
                 }
                 $sessionStorage->getPlugin()->setValue('nnPaymentData', $paymentRequestData);
 		// If payment before order creation option was set as 'No' the payment will be created initially
-		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true) {
+		if($settingsService->getNnPaymentSettingsValue('novalnet_order_creation') != true && (in_array($paymentKey, ['NOVALNET_INVOICE', 'NOVALNET_PREPAYMENT', 'NOVALNET_CASHPAYMENT', 'NOVALNET_MULTIBANCO']) || $paymentService->isRedirectPayment($paymentKey)  || ($paymentKey == 'NOVALNET_GUARANTEED_INVOICE' && $showBirthday == false))) {
 	           $sessionStorage->getPlugin()->setValue('paymentkey', $paymentKey);
 		   $privateKey = $settingsService->getNnPaymentSettingsValue('novalnet_private_key');
         	   $paymentResponseData = $paymentService->performServerCall();
