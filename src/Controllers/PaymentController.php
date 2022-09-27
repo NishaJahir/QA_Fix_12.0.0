@@ -147,8 +147,11 @@ class PaymentController extends Controller
         // Get the payment form post data
         $paymentRequestPostData = $this->request->all();
         
+	// Get the order amount
+	$orderAmount = !empty($paymentRequestPostData['nn_order_amount']) ? $paymentRequestPostData['nn_order_amount'] : 0;
+	    
         // Get the payment request params
-        $paymentRequestData = $this->paymentService->generatePaymentParams($this->basketRepository->load(), $paymentRequestPostData['nn_payment_key']);
+        $paymentRequestData = $this->paymentService->generatePaymentParams($this->basketRepository->load(), $paymentRequestPostData['nn_payment_key'], $orderAmount);
         
         // Setting up the account data to the server for SEPA processing
         if(in_array($paymentRequestPostData['nn_payment_key'], ['NOVALNET_SEPA', 'NOVALNET_GUARANTEED_SEPA'])) {
