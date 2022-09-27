@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
                     currency: String(jQuery('#nn_google_pay').attr('data-currency')), 
                     enforce3d: jQuery('#nn_enforce').val(),
                     paymentMethod: "GOOGLEPAY",
-                    environment: "SANDBOX"
+                    environment: jQuery('#nn_environment').val(),
                 },
                 custom: {
                     lang: String(jQuery('#nn_google_pay').attr('data-order-lang'))
