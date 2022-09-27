@@ -184,7 +184,7 @@ class NovalnetServiceProvider extends ServiceProvider
 		   
 		   $privateKey = $settingsService->getNnPaymentSettingsValue('novalnet_private_key');
         	   $paymentResponseData = $paymentService->performServerCall();
-		   if(!empty($paymentResponseData) && $paymentResponseData['result']['status'] != 'SUCCESS') {
+		   if(!empty($paymentResponseData) && ($paymentResponseData['result']['status'] == 'FAILURE' || $paymentResponseData['status'] == 'FAILURE')) {
 			  $content = $paymentResponseData['result']['status_text'];
 			  $contentType = 'errorCode';
 		   }
